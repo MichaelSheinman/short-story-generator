@@ -1,0 +1,10 @@
+Number of blank lines:  1047
+Number of characters:  20455694
+Number of words:  3792498
+Number of sentences:  271631
+Number of unique words:  151964
+Most common 10 words and counts:  [('the', 209801), ('and', 139615), ('to', 99378), ('of', 85344), ('a', 79847), ('in', 51107), ('was', 50480), ('he', 47874), ('I', 42307), ('that', 40272), ('his', 38616), ('had', 30283), ('it', 29213), ('with', 28874), ('as', 27904), ('for', 27854), ('you', 27608), ('her', 25574), ('she', 24130), ('at', 21749), ('not', 21127), ('on', 20176), ('is', 18707), ('be', 18328), ('but', 17968), ('they', 17624), ('The', 16778), ('have', 16636), ('all', 16305), ('said', 16116), ('so', 14705), ('my', 14355), ('him', 14346), ('were', 14342), ('by', 12213), ('from', 11888), ('this', 11533), ('one', 11487), ('when', 11236), ('which', 10437)]
+Number of question marks:  19304
+Number of exclamation marks:  23270
+Number of periods:  179871
+Number of commas:  309764
