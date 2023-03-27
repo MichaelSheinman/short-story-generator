@@ -7,7 +7,7 @@ data_file = "cleaned_merged_fairy_tales_without_eos.txt"
 STORIES = {}
 POEM_AUTHORS = ['EDWARD LEAR', 'ISAAC WATTS', 'JANE TAYLOR', 'PHOEBE CARY', 'ANN TAYLOR', 'ANONYMOUS', 'CHARLES KINGSLEY', 'CHARLES MACKAY', 'CLEMENT CLARKE MOORE', 'DAVID EVERETT', 'ELIZA LEE FOLLEN', 'FELICIA DOROTHEA HEMANS', 'FELICIA DOROTHEA HEMANS', 'FELICIA DOROTHEA HEMANS', 'FRANCIS C. WOODWORTH', 'FROM M. DE LAMOTTE', 'GEORGE MACDONALD', 'HANNAH FLAGG GOULD', 'HENRY WADSWORTH LONGFELLOW', 'JAMES HOGG', 'JAMES MERRICK',
                 'JAMES WHITCOMB RILEY', 'JANE TAYLOR', 'JEMIMA LUKE', 'LEWIS CARROLL', 'LITTLE B. (TAYLOR?)', 'LYDIA MARIA CHILD', 'MARY HOWITT', 'MARY HOWITT', 'MARY HOWITT', 'OLD CAROL', 'REGINALD HEBER', 'RICHARD MONCKTON MILNES (LORD HOUGHTON)', 'ROBERT BURNS', 'ROBERT LOUIS STEVENSON', 'ROBERT SOUTHEY', 'SABINE BARING-GOULD', 'THOMAS HOOD', 'WILLIAM BRIGHTY RANDS', 'WILLIAM HOWITT', 'WILLIAM ROBERT SPENCER', 'WILLIAM SHAKESPEARE', 'WILLIAM WORDSWORTH']
-
+STORY_TYPES = ['SCANDINAVIAN STORIES', 'GERMAN STORIES', 'FRENCH STORIES', 'ENGLISH STORIES','CELTIC STORIES', 'ITALIAN STORIES', 'JAPANESE STORIES', 'EAST INDIAN STORIES', 'AMERICAN INDIAN STORIES', 'ARABIAN STORIES', 'CHINESE STORIES', 'RUSSIAN STORIES', 'TALES FOR TINY TOTS', 'FANCIFUL STORIES', 'OUR CHILDREN', 'PINOCCHIO\'S ADVENTURES IN WONDERLAND[1]']
 
 def clean_data():
     with open(data_file, "r") as f:
@@ -18,7 +18,7 @@ def clean_data():
             line = lines[i].strip(" \n")
             line = re.sub('[\t]+', '', line)  # to remove tabs
             line = re.sub("        ", '', line)
-            if len(line) == 0 or (line in POEM_AUTHORS):
+            if len(line) == 0 or (line in POEM_AUTHORS) or (line in STORY_TYPES) or ("ADAPTED BY" in line):
                 continue
 
             elif (line in ["CINDERELLA", "BLUE BEARD", "SUPPOSE!", "PRETTY COW", "THE OWL AND THE PUSSY-CAT"]):
@@ -31,6 +31,10 @@ def clean_data():
 
             elif (line[0].isnumeric()):
                 curr_title = line.upper()
+                STORIES[curr_title] = []
+
+            elif (line.isupper() and ("ADAPTED BY" in lines[i+1] or "BY " in lines[i+1])):
+                curr_title = line
                 STORIES[curr_title] = []
 
             elif (line.isupper() and " STORY" in lines[i+1]):
@@ -60,7 +64,7 @@ def clean_data():
                 else:
                     STORIES[curr_title] = [' '.join(first_sentence[2:])]
 
-            elif (line.isupper()) and not (str(lines[i+1].split()[0:2]).isupper() or ("THE END" in line) or ("\"" in line) or ("“" in line) or ("\'" in line) or ("{" in line) or (line in "TRESPASSERS WILL BE PROSECUTED") or (line in "FAMOUS DONKEY THE STAR OF THE DANCE") or (line in "ADAPTED BY") or (line in "* A.D. 1482-1513")):
+            elif (line.isupper()) and not (str(lines[i+1].split()[0:2]).isupper() or ("THE END" in line) or ("\"" in line) or ("“" in line) or ("\'" in line) or ("{" in line) or (line in "TRESPASSERS WILL BE PROSECUTED") or (line in "FAMOUS DONKEY THE STAR OF THE DANCE") or ("ADAPTED BY" in line) or (line in "* A.D. 1482-1513")):
                 if (len(line) >= 11 and len(line) < 50):
                     curr_title = line.upper()
                     STORIES[curr_title] = []
@@ -85,6 +89,9 @@ def clean_data():
         if STORIES[story] == []:
             STORIES.pop(story)
 
+    # Making each story in the dictionary a full string so that it matches the tutorial's format
+    for title in STORIES:
+        STORIES[title] = ' '.join(STORIES[title])
 
 
 clean_data()
