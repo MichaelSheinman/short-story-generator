@@ -1,6 +1,6 @@
-# Bedtime Story Completion Model
-## CSC413 - Neural Networks & Deep Learning Final Project
----
+<h1>Bedtime Story Completion Model</h1>
+<h3>CSC413 - Neural Networks & Deep Learning Final Project</h3>
+
 <br>
 
 ## Introduction
