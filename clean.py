@@ -1,8 +1,5 @@
 # CODE TO PREPROCESS THE DATA -------------
 import re
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import torch
-from torch.utils.data import Dataset, DataLoader
 
 data_file = "cleaned_merged_fairy_tales_without_eos.txt"
 STORIES = {}
@@ -97,33 +94,3 @@ def clean_data():
 
 clean_data()
 num_stories = len(STORIES)
-
-def create_test_set():
-    # Creates a very small test set to compare generated text with the reality
-    # Takes in the last 20 words for every song
-    # TODO: To discuss with group
-    # test_set = {}
-    # for title in STORIES:
-    #     test_set[title] = STORIES[title].str.split().str[-20:].apply(' '.join)
-    pass
-
-
-# Dataset comes from torch.utils.data
-class Stories(Dataset):
-    def __init__(self, control_code, truncate=False, gpt2_type="gpt2", max_length=1024):
-
-        self.tokenizer = GPT2Tokenizer.from_pretrained(gpt2_type)
-        self.stories = []
-
-        for title in STORIES:
-          self.stories.append(torch.tensor(
-                self.tokenizer.encode(f"<|{control_code}|>{STORIES[title][:max_length]}<|endoftext|>")
-            ))
-        if truncate:
-            self.stories = self.stories[:20000]
-        self.stories_count = len(self.stories)
-    def __len__(self):
-        return self.lyrics_count
-
-    def __getstory__(self, story):
-        return self.stories[story]
