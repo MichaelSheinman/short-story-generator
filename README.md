@@ -80,6 +80,17 @@ Below is the training loss curve generated in lstm_model.py. The plot was genera
 <img src='images/train_curve.png' width="40%" height="40%">
 
 ## Hyperparameter Tuning
+GPT2 Model:
+
+RNN Model:
+
+1) Tune <sequence_length>. 
+
+The length of the sequence is a hyperparameter. The model was trained with the 3 values of sequence_length:
+- sequence_length = 3
+- sequence_length = 4
+- sequence_length = 5
+
 
 ## Quantitative Measures
 
