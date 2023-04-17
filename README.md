@@ -49,6 +49,8 @@ Snippet of a short story in the dataset. Overall length is 411 words:
 
 ## Data Transformations
 
+The initial data consisted of a single text file where the titles and stories were not distinctly separated. To make the data usable for our project objectives, we required it to be organized in a structured manner. Consequently, we converted the text file data into a dictionary format, where the titles served as the keys and the stories as the corresponding values. Please refer to the "clean_data" function for further details.
+
 For the story completion model, we use a pre-trained GPT2 text encoder, which encodes the text using Byte-Pair Encoding (BPE). We also restrict the length of the resulting sequence,
 given that GPT2 has a limited context length, which is possibly exceeded by some of the
 stories.
