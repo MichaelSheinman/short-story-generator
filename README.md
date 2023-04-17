@@ -22,6 +22,7 @@ GPT-2 is primarily comprised of a sequence of transformer blocks, each employing
 
 RNN model:
 
+RNN with LSTM cell can be broken down into three main components: the input layer, the LSTM layer, and the output layer. The LSTM layer consists of a series of LSTM cells that process the input sequence in a sequential manner. Each LSTM cell has three main components: the input gate, the forget gate, and the output gate. These gates control the flow of information in and out of the cell, allowing the LSTM to selectively remember or forget information from previous time steps. The output layer of an RNN with LSTM cell receives the final hidden state output from the LSTM layer and produces the final output for the sequence.
 
 
 ## Model Parameters 
