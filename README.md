@@ -77,7 +77,7 @@ Here is the training loss curve generated in lstm_model.py with the following hy
 - n_hidden = 128
 - sequence_length = 4
 
-<img src='images/train_curve.png'/>
+<img src='images/train_curve.png'/ width="50%" height="50%">
 
 ## Hyperparameter Tuning
 
