@@ -17,7 +17,7 @@ For the title generation, we trained an RNN model from scratch. Both were traine
 
 GPT2 model:
 
-GPT-2 is primarily comprised of a sequence of transformer blocks, each employing multi-headed attention (Improving Language Understanding by Generative Pre-Training), with multiple normalization layers (Language Models are Unsupervised Multitask Learners). Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one.
+GPT-2 is primarily comprised of a sequence of transformer blocks, each employing multi-headed attention ([Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)), with multiple normalization layers ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)). Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one.
 
 RNN model:
 
