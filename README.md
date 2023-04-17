@@ -34,6 +34,10 @@ Data source: https://www.kaggle.com/datasets/edenbd/children-stories-text-corpus
 
 ## Data Transformations
 
+For the story completion model, we use a pre-trained GPT2 text encoder, which encodes the text using Byte-Pair Encoding (BPE).
+
+For the title generator, we use a naive bag-of-words encoder. This has the limitation that the model cannot produce titles using words not seen in the training set.
+
 ## Data Split 
 
 ## Training Curve
