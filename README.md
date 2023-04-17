@@ -182,6 +182,12 @@ Laura Maldonado :
 
 Mateus Moreira :
 
+- Contributed to code for finetuning GPT2 and employing GPT2 for story completion.
+- Implemented validation for finetuned GPT2.
+- Worked on parts of the writeup.
+- Carried out exploratory work on some model architectures, including direct integration of finetuned GPT2 with RNN (unfortunately I found that this seemed to be computationally infeasible).
+- General contributions to debugging.
+
 Michael Sheinman:
 
 Ekaterina Semyanovskaya:
