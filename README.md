@@ -11,10 +11,13 @@ We created two models to aid writers with creating short story.
 
 The two models can be used together in a web-application to help writers overcome the writer's block and improve their speed of writing short stories. 
 
+For the short-story generation, we fine-tuned a pre-trained GPT-2 model.
+
 
 ## Model Figure
 GPT2 model:
 
+GPT-2 is primarily comprised of a sequence of transformer blocks, each employing multi-headed attention (Improving Language Understanding by Generative Pre-Training), with multiple normalization layers (Language Models are Unsupervised Multitask Learners). Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one.
 
 
 RNN model:
@@ -30,7 +33,18 @@ RNN Model:
 
 
 ## Data  
-Data source: https://www.kaggle.com/datasets/edenbd/children-stories-text-corpus
+
+We used the children stories text corpus data set, available on https://www.kaggle.com/datasets/edenbd/children-stories-text-corpus. This data set is a collection of children books collected from Project Gutenberg. Project Gutenberg aims to encourage the distribution of eBooks by sharing books or stories that are in the public domain, meaning there are no intellectual property right over the data. The Kaggle dataset is similarly under the public domain (Creative Commons license) waiving rights to copyright law. Hence we have permission to use the data.
+
+Since the data is a collection of short stories, it is ideal for text generation. The dataset consists of 20.6 MB of English text. This is sufficient for our purposes as we are starting with the GPT-2 model, so we only need to fine-tune the model for the dataset. As for title generation, the dataset contains the titles of all the stories, so we can use that for training and evaluation. 
+
+The dataset consists of around 1000 stories, with an average story length of around 3014 words. There are a total of 3,792,498 words, with 151,964 unique words. There are 19,304 question marks, 23,270 exclamation marks, 179,871 periods, and 309,764 commas. The top 5 most common words along with their frequencies are "the" (209,801), "and" (139,615), "to" (99,378), "of" (85,344), and 'a' (79,847).
+    
+Snippet of a short story in the dataset. Overall length is 411 words:
+
+    THE REAL PRINCESS 
+    There was once a Prince who wished to marry a Princess; but then she must be a real Princess. He travelled all over the world in hopes of finding such a lady; \textbf{[...]} The Prince accordingly made her his wife; being now convinced that he had found a real Princess. The three peas were however put into the cabinet of curiosities, where they are still to be seen, provided they are not lost.
+    Wasn't this a lady of real delicacy?
 
 ## Data Transformations
 
