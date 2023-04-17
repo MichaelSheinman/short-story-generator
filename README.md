@@ -301,13 +301,15 @@ It is also important to notice that despite having 20.6 MB of data, the stories 
 ## Authors
 
 <br>
-Laura Maldonado :
+
+**Laura Maldonado :**
+
 - Worked on cleaning and pre-processing the dataset
 - Setting up the LSTM model
 - Putting the code for the models on the repo
 - Implementing final.py: where the user interacts with the project
 
-Mateus Moreira :
+**Mateus Moreira :**
 
 - Contributed to code for finetuning GPT2 and employing GPT2 for story completion.
 - Implemented validation for finetuned GPT2.
@@ -315,7 +317,7 @@ Mateus Moreira :
 - Carried out exploratory work on some model architectures, including direct integration of finetuned GPT2 with RNN (unfortunately I found that this seemed to be computationally infeasible).
 - General contributions to debugging.
 
-Michael Sheinman:
+**Michael Sheinman:**
 
 - Finetuned GPT-2 and used GPT-2 for story completion. Completed initial overfitting on a single data point, training, checkpoints, and testing.
 - Worked on parts of the writeup.
@@ -323,4 +325,4 @@ Michael Sheinman:
 - Attempted to setup development using the lab machines GPU. Unfortunately, I was not able to accomplish this due to a lack of installation permissions, issues with Anaconda virtual environments, and no reply from Andrew Wang.
 - Attempted setting up 3 different architectures: NanoGPT, GPT-2 Medium, and plain transformers. Found that none of these architectures were feasible due to Google Collab limitations and short story sequences being too long.
 
-Ekaterina Semyanovskaya:
+**Ekaterina Semyanovskaya:**
