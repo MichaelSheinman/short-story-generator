@@ -31,7 +31,15 @@ GPT2 Model:
 RNN Model: 
 
 ## Model Examples 
+GPT2 Model:
 
+RNN Model:
+
+Successful story title generated: "teeny frank ."
+Unsuccessful story title generated: "year blackfeet cudred on how the how all his his pipes saw ."
+
+The first title is considered successful since it is concise, logical and descriptive. It was generated with the sequence_length hyperparameter = 4. 
+The second title is considered unsuccessful since it lacks meaning. It was generated with the sequence_length hyperparameter = 3.
 
 ## Data  
 
@@ -60,6 +68,16 @@ For the title generator, we use a naive bag-of-words encoder. This has the limit
 ## Data Split 
 
 ## Training Curve
+GPT2 Model:
+
+RNN Model: 
+
+Here is the training loss curve generated in lstm_model.py with the following hyperparameters:
+- learning_rate = 0.005
+- n_hidden = 128
+- sequence_length = 4
+
+<img src='images/train_curve.png' width="50%" height="50%">
 
 ## Hyperparameter Tuning
 
