@@ -17,7 +17,9 @@ For the title generation, we trained an RNN model from scratch. Both were traine
 
 GPT2 model:
 
-GPT-2 is primarily comprised of a sequence of transformer blocks, each employing multi-headed attention ([Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)), with multiple normalization layers ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)). Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one.
+GPT-2 is primarily comprised of a sequence of transformer blocks, each employing (masked) multi-headed attention ([Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)), with multiple normalization layers at the beginning of each block, plus one normalization layer at the end of the transformer stack ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)). The exact number and size of these blocks depends on the size of model used (see "Model Parameters" below). Note the GPT architecture is decoder-only.
+
+Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one (see "Data Transformation" below for more details). Of note, the transformer sequence is preceded by an encoder which encodes these tokens and applies positional encoding. When carrying out text generation, the transfomer sequence is followed by a linear modelling head, which is a "linear layer with weights tied to the input embeddings" ([Documentation](https://huggingface.co/docs/transformers/model_doc/gpt2))
 
 RNN model:
 
@@ -26,6 +28,23 @@ RNN with LSTM cell can be broken down into three main components: the input laye
 ## Model Parameters
 
 GPT2 Model:
+
+Due to compute limitations, we present our results based on our use of the smallest GPT2 instance, which has approximately (117M) 117 \* 1024^2 parameters ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)), laid out across 12 layers (i.e. 12 transformer blocks), whose inputs and outputs are 768-dimensional. The attention layers work with 1024 token context lengths and have 12 heads. The feed-forward layers work with dimension 3072 (as in GPT1).
+
+In particular, we have the following parameter counts:
+
+For the input embedding layer, we have 38597376 parameters. This corresponds to 50257, the vocab size, times 768, the embedding dimensionality.
+
+For the positional embedding, we have 786432 parameter. This corresponds to 1024, the positional embedding size, times 768, the embedding dimensionality.
+
+For the transformer stack, we have 85054464 parameters. There are 12 transfomer layers, each with one self-attention layer, one feed-forward layer, and one normalization layer.
+
+- The normalization layer has a relatively negligible 1536 parameters (twice the embedding dimension for the two distribution parameters each).
+- For the self-attention layer, we have approximately 4 \* (768^2) parameters, corresponding to a linear output (768^2 matrix), and multiple Q, K, V matrices (12 heads _ 3 matrices each in total, each matrix having 768 _ (768/12) parameters --- notice here that the outputs for these is divided by the head count, which ensures concatenating the attentions will result in a 768-dimensional vector). Refere to the source below for more details (and the exact calculation, if desired).
+- For the feed-forward layer, there are two linear layers that start with the 768-dimensional embedding, grow it to 3072 dimensions, apply ReLU, and then bring it back to a 768-dimensional embedding. This corresponds to a total parameter count of (768 \* 3072 + 3072) + (768 \* 3072 + 768) (matrix weights and biases).
+  (See [How to Estimate the Number of Parameters in Transformer models](https://towardsdatascience.com/how-to-estimate-the-number-of-parameters-in-transformer-models-ca0f57d8dff0) for details on this calculation)
+
+The last normalization layer `ln_f` has a relatively negligible 1536 parameters (which is two times the embedding dimension)
 
 RNN Model:
 
@@ -156,9 +175,9 @@ From the analysis of multiple output blocks, `learning_rate = 0.005` is the bett
 
 ## Quantitative Measures
 
-For the GPT-2 model we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU.  We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a  quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.  
+For the GPT-2 model we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU. We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.
 
-BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text. 
+BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text.
 
 ## Results
 
@@ -197,9 +216,8 @@ Michael Sheinman:
 
 - Finetuned GPT-2 and used GPT-2 for story completion. Completed initial overfitting on a single data point, training, checkpoints, and testing.
 - Worked on parts of the writeup.
-- Combined the GPT-2 and RNN models into a single file by uploading both checkpoint files externally to dropbox.  
+- Combined the GPT-2 and RNN models into a single file by uploading both checkpoint files externally to dropbox.
 - Attempted to setup development using the lab machines GPU. Unfortunately, I was not able to accomplish this due to a lack of installation permissions, issues with Anaconda virtual environments, and no reply from Andrew Wang.
-- Attempted setting up 3 different architectures: NanoGPT, GPT-2 Medium, and plain transformers. Found that none of these architectures were feasible due to Google Collab limitations and short story sequences being too long. 
-
+- Attempted setting up 3 different architectures: NanoGPT, GPT-2 Medium, and plain transformers. Found that none of these architectures were feasible due to Google Collab limitations and short story sequences being too long.
 
 Ekaterina Semyanovskaya:
