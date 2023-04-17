@@ -84,7 +84,7 @@ GPT2 Model:
 
 RNN Model:
 
-1) Tune <sequence_length>. 
+1) Tune ```sequence_length```. 
 
 The length of the sequence is a hyperparameter. The model was trained with the 3 values of sequence_length:
 - sequence_length = 3
