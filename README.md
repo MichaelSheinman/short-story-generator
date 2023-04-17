@@ -29,7 +29,7 @@ RNN with LSTM cell can be broken down into three main components: the input laye
 
 GPT2 Model:
 
-Due to compute limitations, we present our results based on our use of the smallest GPT2 instance, which has approximately (117M) 117 \* 1024^2 parameters ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)), laid out across 12 layers (i.e. 12 transformer blocks), whose inputs and outputs are 768-dimensional. The attention layers work with 1024 token context lengths and have 12 heads. The feed-forward layers work with dimension 3072 (as in GPT1).
+Due to compute limitations, we present our results based on our use of the smallest GPT2 instance, which has approximately 117 \* 1024^2 parameters (117M) ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)), laid out across 12 layers (i.e. 12 transformer blocks), whose inputs and outputs are 768-dimensional. The attention layers work with 1024 token context lengths and have 12 heads. The feed-forward layers work with dimension 3072 (as in GPT1).
 
 In particular, we have the following parameter counts:
 
