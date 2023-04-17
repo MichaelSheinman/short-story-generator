@@ -3,7 +3,7 @@
 
 ## Introduction
 
-We created two models to aid writers with creating short story.
+We created two models to aid writers with creating short stories.
 
 - A short-story generator: A model that takes the start of a short story and continues the story.
 - A title generator: a sequence-to-sequence model that generates a title given a short story.
@@ -11,7 +11,7 @@ We created two models to aid writers with creating short story.
 The two models can be used together in an application to help writers overcome the writer's block and improve their speed of writing short stories.
 
 For the short-story generation, we fine-tuned a pre-trained GPT-2 model.
-For the title generation, we trained an RNN model from scratch.
+For the title generation, we trained an RNN model from scratch. Both were trained on a dataset comprised of childrens' books. Therefore, we present our model in the context of generating this type of story --- though we believe that the architecture employed should be similarly useful for other genres.
 
 ## Model Figure
 
