@@ -159,3 +159,14 @@ It is also important to notice that despite having 20.6 MB of data, the stories 
 
 ## Authors
 <br>
+Laura Maldonado :
+- Worked on cleaning and pre-processing the dataset
+- Setting up the LSTM model
+- Putting the code for the models on the repo
+- Implementing final.py: where the user interacts with the project
+
+Mateus Moreira :
+
+Michael Sheinman:
+
+Ekaterina Semyanovskaya:
