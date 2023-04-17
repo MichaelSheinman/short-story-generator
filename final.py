@@ -4,6 +4,14 @@ from lstm_model import *
 from story_generator import *
 non_info_words = ["a", "the", "or", "he", "she", "in", "on", "my", "it"]
 
+# importing timer to create typewriter effect
+from time import sleep
+
+def typewriter_effect(words, speed):
+    for char in words:
+        sleep(speed)
+        print(char, end='', flush=True)
+
 def generate_story(prompt):
     completed_story = complete_prompt(prompt, model2)
     word_occurences = {}
@@ -28,21 +36,18 @@ def generate_story(prompt):
     final_title.extend(story_vocab[1:])
     final_title = ' '.join(final_title).upper()
     # return the completed title and the story
-    print(final_title)
-    print(completed_story)
+    typewriter_effect(final_title, 0.1)
+    typewriter_effect(completed_story, 0.1)
 
 if __name__ == "__main__":
-    print("--------------------------------------------------------")
-    print("--------------------------------------------------------")
-    print("Hello! This is your personal bedtime story assitant")
-    print("--------------------------------------------------------")
+    print("------------ HELLO! I am your personal bedtime story assitant ------------")
     print("--------------------------------------------------------")
     prompt = input('Please write the beginning of your bedtime story and we will help you write the rest: \n')
     print("--------------------------------------------------------")
-    print("-------------Completing story ....------------------------")
-    print("-------------Generating Title ....------------------------")
-    print("--------------------------------------------------------")
-    print("--------------------------------------------------------")
+    typewriter_effect("COMPLETING STORY", 0.1)
+    typewriter_effect("... ...  ...        ... ...  ...", 0.2)
+    typewriter_effect("GENERATING TITLE", 0.1)
+    typewriter_effect("... ...  ...        ... ...  ...", 0.2)
     print("--------------------------------------------------------")
     print("--------------------------------------------------------")
     generate_story(prompt)
