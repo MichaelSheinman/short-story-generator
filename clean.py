@@ -93,4 +93,11 @@ def clean_data():
 
 
 clean_data()
-num_stories = len(STORIES)
+
+# Used for the story generator
+valid_stories = {}
+for key, value in STORIES.items():
+  if len(value) >= 600:  # stories that are too short aren't useful for us
+    valid_stories[key] = value
+sorted_stories = sorted(valid_stories.values(), key=len)
+total_data = len(sorted_stories)

@@ -1,7 +1,11 @@
-# Importing everything from clean.py
+# Importing everything from clean.py to get the formatted. clean data
 from clean import *
 import torch
 import torch.nn as nn
+import time
+import numpy as np
+import math
+import matplotlib.pyplot as plt
 
 # THIS IS THE CODE FOR THE TITLE GENERATION MODEL----------------------------------
 # ---------------------------------------------------------------------------------
@@ -232,12 +236,7 @@ def train(sequence, target, device):
 
     return output, loss.item()
 
-# The actual training and keeping track of it
-import time
-import numpy as np
-import math
-import matplotlib.pyplot as plt
-
+# The actual training and get the model's training curve
 # Set up the number of iterations, printing and plotting options
 n_iters = 1100000
 print_every = 1000
