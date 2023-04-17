@@ -156,6 +156,10 @@ From the analysis of multiple output blocks, `learning_rate = 0.005` is the bett
 
 ## Quantitative Measures
 
+For the GPT-2 model we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU.  We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a  quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.  
+
+BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text. 
+
 ## Results
 
 ## Justification of Results
