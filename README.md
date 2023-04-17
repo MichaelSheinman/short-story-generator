@@ -35,16 +35,21 @@ In particular, we have the following parameter counts:
 
 For the input embedding layer, we have 38597376 parameters. This corresponds to 50257, the vocab size, times 768, the embedding dimensionality.
 
-For the positional embedding, we have 786432 parameter. This corresponds to 1024, the positional embedding size, times 768, the embedding dimensionality.
+For the positional embedding, we have 786432 parameters. This corresponds to 1024, the positional embedding size, times 768, the embedding dimensionality.
 
-For the transformer stack, we have 85054464 parameters. There are 12 transfomer layers, each with one self-attention layer, one feed-forward layer, and one normalization layer.
+For the transformer stack, we have 12 transfomer layers, each with one self-attention layer, one feed-forward layer, and one normalization layer:
 
 - The normalization layer has a relatively negligible 1536 parameters (twice the embedding dimension for the two distribution parameters each).
-- For the self-attention layer, we have approximately 4 \* (768^2) parameters, corresponding to a linear output (768^2 matrix), and multiple Q, K, V matrices (12 heads _ 3 matrices each in total, each matrix having 768 _ (768/12) parameters --- notice here that the outputs for these is divided by the head count, which ensures concatenating the attentions will result in a 768-dimensional vector). Refere to the source below for more details (and the exact calculation, if desired).
+- For the self-attention layer, we have approximately 4 \* (768^2) parameters, corresponding to a linear output (768^2 matrix), and multiple Q, K, V matrices (12 heads \* 3 matrices each in total, each matrix having 768 \* (768/12) parameters --- notice here that the outputs for these is divided by the head count, which ensures concatenating the attentions will result in a 768-dimensional vector). Refere to the source below for more details (and the exact formula, if desired).
 - For the feed-forward layer, there are two linear layers that start with the 768-dimensional embedding, grow it to 3072 dimensions, apply ReLU, and then bring it back to a 768-dimensional embedding. This corresponds to a total parameter count of (768 \* 3072 + 3072) + (768 \* 3072 + 768) (matrix weights and biases).
-  (See [How to Estimate the Number of Parameters in Transformer models](https://towardsdatascience.com/how-to-estimate-the-number-of-parameters-in-transformer-models-ca0f57d8dff0) for details on this calculation)
+
+In total this yields approximately `4 * (768^2) + 1536 + (768 * 3072 + 3072) + (768 * 3072 + 768)` parameters per layer times 12 layers, or almost 85 million parameters --- not the exact value of 85054464 since we neglected a few biases in our calculation above for simplicity --- but very close.
+
+(See [How to Estimate the Number of Parameters in Transformer models](https://towardsdatascience.com/how-to-estimate-the-number-of-parameters-in-transformer-models-ca0f57d8dff0) for details on this calculation)
 
 The last normalization layer `ln_f` has a relatively negligible 1536 parameters (which is two times the embedding dimension)
+
+Note that the language modelling head has weights tied to the input embedding, so it does not add to our parameter count.
 
 RNN Model:
 
