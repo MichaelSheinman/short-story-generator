@@ -308,6 +308,7 @@ def generate_title():
         i = i+1
     return sentence
 
+# ----------------------------- 5. TESTING LSTM MODEL OUTPUTS --------------------------------
 # Sample 5 titles and print
 for i in range(5):
     sampled_title = generate_title()
