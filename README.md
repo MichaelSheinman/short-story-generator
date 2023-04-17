@@ -195,4 +195,11 @@ Mateus Moreira :
 
 Michael Sheinman:
 
+- Finetuned GPT-2 and used GPT-2 for story completion. Completed initial overfitting on a single data point, training, checkpoints, and testing.
+- Worked on parts of the writeup.
+- Combined the GPT-2 and RNN models into a single file by uploading both checkpoint files externally to dropbox.  
+- Attempted to setup development using the lab machines GPU. Unfortunately, I was not able to accomplish this due to a lack of installation permissions, issues with Anaconda virtual environments, and no reply from Andrew Wang.
+- Attempted setting up 3 different architectures: NanoGPT, GPT-2 Medium, and plain transformers. Found that none of these architectures were feasible due to Google Collab limitations and short story sequences being too long. 
+
+
 Ekaterina Semyanovskaya:
