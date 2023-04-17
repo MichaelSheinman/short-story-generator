@@ -160,7 +160,8 @@ From the analysis of multiple output blocks, `learning_rate = 0.005` is the bett
 
 ## Justification of Results
 
-One of the big challenges we ran into was simply compute. Fine tuning GPT2 is very computationally expensive.
+One of the big challenges we ran into was simply compute. Fine tuning GPT2 is very computationally expensive. Additionally, when we attempted to use GPT2 versions with large parameter counts, we found that we quickly ran out of memory. Therefore, we had to stick with a smaller parameter count, which
+reduces the quality of our outputs.
 
 Additionally, we noticed that validation loss tended to level off after a small number of epochs. Given that modern LLMs are usually trained with relatively few passes over the data, this is not completely unexpected. Even so, it may indicate limitations in our training process.
 
