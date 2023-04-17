@@ -185,7 +185,103 @@ For the GPT-2 model we investigated a few different quantitative methods of meas
 BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text.
 
 ## Results
+GPT2 Model:
 
+RNN Model:
+In the case of the title generation we get the following sampled titles with a sequence_length = 3:
+```
+indian dickon tea .
+penny maleen .
+norroway paris .
+herdsman discontented .
+real are .
+year blackfeet cudred on how the how all his his pipes saw
+are anything to seeing food wife xi white hump cobbler’s learn learn
+anne cudred .
+tuk .
+godmother ix .
+goat imagine criticism .
+chap couch .
+claus to peace strife d london george .
+tobacco wen .
+bad jolly on are were x all how in in sorrow tempests
+```
+We get the following sampled titles with a sequence_length = 4:
+
+SAMPLE 1
+```
+riding among war .
+allowed fable .
+scuttle stag .
+rest shuttle .
+closing moore iv .
+know when hood your question ruler oh out and began borrow began
+walk tash .
+santa bear .
+leaves hill .
+stork march .
+sack girl .
+angels .
+vanity leyden .
+beeches ode iv .
+midsummer .
+```
+
+SAMPLE 2
+```
+mate sparrow .
+strangest frost .
+stolen xii .
+much huntsman actors .
+publishers midsummer .
+jackdaw sir .
+proserpine knowall lip .
+harm maid .
+mole fine .
+child heidelberg .
+teeny frank .
+clever delight .
+inferior coronet history .
+feeler luck .
+meets iv .
+```
+We get the following sampled titles with a sequence_length = 5:
+SAMPLE 1
+```
+show fed pack himself himself .
+hogshead cyclone n debarred discovered .
+period orphant magic world .
+balloon appears lead himself .
+boscombe tail r s wen .
+youth right he command was who if the the get ready one’s
+vampire .
+balloon understand thought peace pieces .
+ball kindness experiments nail discovered .
+u tobacco .
+chorus slipper .
+rowland woodman king’s do readily .
+harpies beautiful pilgrims tears’ .
+prevented guard do under himself .
+play shadow ramhah .
+```
+SAMPLE 2
+```
+bye power .
+age seasons witch publishers .
+right river witch was he he not not not not not not
+remain belt .
+famine wives secret .
+period punch .
+jack bennett .
+impressions out chapter i escape .
+suds miacca .
+happy kingfisher .
+mountain kangaroo away other oldtown .
+runs bright wait vi himself .
+china coffin jewels he know must .
+plain brook tobacco beth .
+eggs land childish readily escape i .
+```
 ## Justification of Results
 
 One of the big challenges we ran into was simply compute. Fine tuning GPT2 is very computationally expensive. Additionally, when we attempted to use GPT2 versions with large parameter counts, we found that we quickly ran out of memory. Therefore, we had to stick with a smaller parameter count, which
