@@ -56,6 +56,28 @@ Note that the language modelling head has weights tied to the input embedding, s
 ## Model Examples
 
 #### GPT2 Model:
+Successful story generated:
+
+Prompt: Laura was searching for a prince
+
+Story:
+> Laura was searching for a prince when she found her in a swamp. 
+> He was a dragon, a warrior, and a king. The dragon was an evil one, and she was a witch, a witch's child. 
+> She wanted to take over the kingdom, and the dragon didn't have a good reason to do so. 
+> But the dragon was just one of many dragons, and she could not be blamed for her evil ways. 
+> She was the only one that could stop the evil from coming.
+> But then the dragon fell, and she was left with a dragon. And the dragon wasn't the only one that had fallen. 
+> The king was the one that had tried to take over the kingdom, and he was right there in the middle of the swamp. 
+> He was the one who had brought the dragon to the swamp, and she had been trying to take over the kingdom. She was wrong. She had been wrong.
+> And she had been wrong again.
+
+Unsuccessful story generated
+
+Prompt: My dog went to the park and he found
+
+Story:
+> My dog went to the park and he found me. He looked at me and said, 'I'm sorry, it's me.' And he said, 'I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry.' He said, 'That's not me, that's a friend.' And I said, 'It's not me. It's a dog. I'm a dog. It's not me. It's a friend.' And he said, 'That's not me, that's a friend.' And I said, 'That's not me. It's a dog. I'm a dog.' He said, 'That's not me.' And I said, 'That's not me. It's a friend.' And he said, 'That's not me.' And I said, 'That's not me.' And he said, 'That's not me.' And he said, 'That's not me.' And I said, 
+
 
 #### RNN Model:
 
