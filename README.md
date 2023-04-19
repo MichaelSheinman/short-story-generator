@@ -113,6 +113,8 @@ For the title generator, we use a naive bag-of-words encoder. This has the limit
 
 ## Data Split
 
+For the GPT-2 model, we did a 70-10-20 split. 70% of the data was the training set, 10% of the data was the validation set, and 20% of the data was the testing set. This is a fairly standard split. We decided to place more data into the testing set (20%) in contrast to validation because we run validation at each epoch, and the process was fairly time consuming. Testing in contrast is done only once, after the model is trained.  
+
 ## Training Curve
 
 #### GPT2 Model:
@@ -137,6 +139,13 @@ Below is the training loss curve generated in lstm_model.py. The plot was genera
 ## Hyperparameter Tuning
 
 #### GPT2 Model:
+
+There are a number of hyperparameters for the GPT-2 model, and we have experimented with different combinations of these. Here are our results:
+- Batch Size. Number of samples used in a pass. Due to the large number of parameters GPT-2, we were limited to small batch sizes (4 or below). These batch sizes did not make a significant difference. 
+- Epochs. We found that there was no benefit to a large number of epochs. After 2 epochs, the validation loss remained steady and did not decrease further. 
+- Learning rate. We tried different values of learning rate, ranging from values such as 1e-6 to 2e-4. We also tried using a scheduler. We did not see a significant impact from the learning rate on the overall training. 
+- max_seq_len: The maximum length of a sequence, the amount of context we could capture. We could only go up to 400 without running into out of memory errors. 
+
 
 #### RNN Model:
 
