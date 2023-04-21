@@ -282,11 +282,11 @@ plt.figure()
 plt.plot(all_losses)
 
 
-def generate_title():
+def generate_title(input_word):
     # The max number of words the generated titles will have
     max_num_words = 12
     # Initialize input step and hidden state
-    input = torch.zeros(1, 1, vocab_size)
+    input = wordToTensor(input_word)
     hidden = (torch.zeros(1, 1, n_hidden).to(device), torch.zeros(1, 1, n_hidden).to(device))
     i = 0
     output_word = None

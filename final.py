@@ -46,8 +46,13 @@ if __name__ == "__main__":
     print("--------------------------------------------------------\n")
     typewriter_effect("COMPLETING STORY", 0.1)
     typewriter_effect("... ...  ...        ... ...  ...\n", 0.2)
+    first_word = input('Please write the first word of the title: \n')
+    while first_word not in VOCABULARY.keys():
+        print("------------ This word is not in our vocabulary unfortunately. Please insert another valid word. ------------\n")
+        first_word = input('Please write the first word of the title: \n')
     typewriter_effect("GENERATING TITLE", 0.1)
     typewriter_effect("... ...  ...        ... ...  ...\n", 0.2)
     print("--------------------------------------------------------\n")
     print("--------------------------------------------------------\n")
+    generate_title(first_word)
     generate_story(prompt)
