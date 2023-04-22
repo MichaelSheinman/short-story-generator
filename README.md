@@ -292,13 +292,19 @@ From the analysis of multiple output blocks, `learning_rate = 0.005` is the bett
 
 ## Quantitative Measures
 
-For the **GPT-2 model** we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU. We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.
+First, for both models we used the loss to measure the progress the models make while training.
 
-BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text.
+In addition, for the **GPT-2 model** we investigated a few different quantitative methods of measuring our model on the final testing set. We examined BLEU, ROUGE, and BERTScore. 
+We originally planned to use BLEU as our metric since it is a very widespread metric that measures similarity between two texts.  The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation. However, after experimenting with this metric we found that it does not make sense for our task. While BLEU measures how good the quality of a machine-generated translation is, writing short-stories is more of a creative task. The continuations of short-stories can be surprising and unusual - they are not a a translation task. 
+Instead, we decide to use ROGUE. ROGUE stands for Recall-Oriented Understudy for Gisting Evaluation. Specifically, we used ROUGE-N, which measures the overlap of n-grams. We found ROGUE superior because it is better at measuring whether the text matches the context, rather than attempting to just measure the text as a translation.  
 
 ## Quantitative and Qualitative Results
 
 #### GPT2 Model:
+ROGUE is measured on a scale of 0 to 1, with 0 indicating poor similarity and 1 indicating essentially identical text. We obtained a ROGUE score of 0.71, which is a good score for the task.    
+We have also reduced the training loss from 3.34 to 2.95, and we reduced the validation loss from 3.25 to 3.04. 
+In addition, as we showed in the model examples, our model managed to create coherent story examples.  
+
 
 #### RNN Model:
 
