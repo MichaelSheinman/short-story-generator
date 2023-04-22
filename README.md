@@ -113,10 +113,12 @@ Story:
 
 *Unsuccessful story generated*
 
-Prompt: My dog went to the park and he found
+Prompt: Mateus loves playing with his magical AI model
 
 Story:
-> My dog went to the park and he found me. He looked at me and said, 'I'm sorry, it's me.' And he said, 'I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry.' He said, 'That's not me, that's a friend.' And I said, 'It's not me. It's a dog. I'm a dog. It's not me. It's a friend.' And he said, 'That's not me, that's a friend.' And I said, 'That's not me. It's a dog. I'm a dog.' He said, 'That's not me.' And I said, 'That's not me. It's a friend.' And he said, 'That's not me.' And I said, 'That's not me.' And he said, 'That's not me.' And he said, 'That's not me.' And I said, 
+> Mateus loves playing with his magical AI model of human-like features and looks as though it has found the right balance between his skill and his natural ability. He is able to move freely on all four limbs, even his head, while in his head the rest of the body is entirely unplumbed. When he is feeling tired or tired, he can hold his head in one hand while his right hand rests on his arm. At night, he sleeps in his bed, in the
+
+This example suggests the model still struggles generating coherent stories starting from words that are outside it's training set. 
 
 
 #### **RNN Model:**
@@ -191,8 +193,7 @@ In the case of the **RNN model**, we did not split the data as we wanted to make
 
 #### **GPT2 Model:**
 
-The training and validation curves for the GPT-2 model are shown below. We found that regardless of the amount of epochs we attempted to use, we were not able to decrease the validation loss beyond 2 epochs. 
-We suspect this may due to a lack of data. Each story features different words and patterns from stories in the training set do not necessarily translate to strong patterns in validation set, beyond some basic level of the structure. 
+The training and validation curves for the GPT-2 model are shown below. We have attempted to train the model for 12 epochs. In the first 6 epochs, both the training loss and the validation loss have steadily decreased. However, after 6 epochs the validation loss started increasing which suggests that the model started overfitting. While training, we have saved a checkpoint for the model with the lowest total validation loss to avoid overfitting. 
 
 <img src='images/training_validation_gpt2.png' width="40%" height="40%">
 
