@@ -217,8 +217,8 @@ Below is the training loss curve generated in lstm_model.py. The plot was genera
 There are a number of hyperparameters for the GPT-2 model, and we have experimented with different combinations of these. Here are our results:
 - Batch Size. Number of samples used in a pass. Due to the large number of parameters GPT-2, we were limited to small batch sizes (4 or below). These batch sizes did not make a significant difference. 
 - Epochs. We found that there was no benefit to a large number of epochs. After 2 epochs, the validation loss remained steady and did not decrease further. 
-- Learning rate. We tried different values of learning rate, ranging from values such as 1e-6 to 2e-4. We also tried using a scheduler. We did not see a significant impact from the learning rate on the overall training. 
-- max_seq_len: The maximum length of a sequence, the amount of context we could capture. We could only go up to 400 without running into out of memory errors. 
+- Learning rate. At first, we tried an approach of using a using a [linear scheduler with warmup](https://huggingface.co/docs/transformers/main_classes/optimizer_schedules) scheduler to change the learning. We found that using this approach, regardless of the learning rate we set, we would have the loss decrease for 2 iterations and then remain steady. This was a major issue as the model was not learning enough from the dataset. Taking out the scheduler fixed this problem and improved the quality of the stories.  
+- max_seq_len: The maximum length of a sequence, the amount of context we could capture. We could only go up to 400 without running into out of memory errors. This also means that the model tends to lose context when prompted to generate longer stories. We found that when promopted to generate long stories, the model tends to start repeating words over and over.  
 
 
 #### **RNN Model:**
@@ -399,10 +399,17 @@ eggs land childish readily escape i .
 ```
 ## Justification of Results
 
-One of the big challenges we ran into was simply compute. Fine tuning GPT2 is very computationally expensive. Additionally, when we attempted to use GPT2 versions with large parameter counts, we found that we quickly ran out of memory. Therefore, we had to stick with a smaller parameter count, which
-reduces the quality of our outputs.
+### **GPT-2 Model** 
 
-Additionally, we noticed that validation loss tended to level off after a small number of epochs. Given that modern LLMs are usually trained with relatively few passes over the data, this is not completely unexpected. Even so, it may indicate limitations in our training process.
+Overall, we are happy with the performance of the GPT-2 model. 
+
+* When we started out, our default hyperparameter choices for the model did not generalize much and we could not fine-tune the model to short stories. However, after tuning the hyperparameters we were able to improve the quality of the stories. This was both evident in an improvement to the quality of the generated stories and an improved BLEU score for our test set. 
+* After our initial failed attempts, we had doubts that a training set of 1,000 stories would not be enough to make a meaningful difference in the quality of the trained stories. We were considering data augmentation strategies (which we tried, although they made the quality of the stories worse) as well as going back to data collection and obtaining more stories. Thankfully, tuning the hyperparameters improved the quality of the stories and we did not need to collect more data.  
+* We ran into a big challenge with compute power using the GPT-2 model. GPT-2 was released as a collection of 4 models, including GPT-2 small, GPT-2 medium, GPT-2 large, and GPT-2 extra large. Training on google collab, we ran into out of RAM errors with the medium model. As such, we only trained our model on the GPT-2 small model. Despite this, the model was still able to generate many short stories that we found entertaining and well-made.  
+
+
+
+
 ### **RNN Model**
 1. Training:
 
