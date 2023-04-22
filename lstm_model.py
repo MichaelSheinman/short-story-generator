@@ -18,69 +18,78 @@ def clean_title(title):
     '''
     Removes punctuation, lowercases and numbers from titles
     '''
-    # lowercase
+    # upper- to lowercase
     title = str(title).lower()
-    # replace punctuation into spaces
-    title = re.sub(r"[,.;@#?!&$%<>-_*/\()~='+:`]+\ *", " ", title)
-    title = re.sub('-', ' ', title)
-    title = re.sub("''", ' ', title)
-    # replace numbers into spaces
-    title = re.sub(r"[0123456789]+\ *", " ", title)
-    #remove duplicated spaces
-    title = re.sub(' +', ' ', title)
 
+    # remove numbers
+    title = re.sub(r"[0123456789]+\ *", " ", title)
+
+    # remove punctuation
+    title = re.sub(r"[,.&$%<>@#?-_*/\()~='+;!:`]+\ *", " ", title)
+    title = re.sub("''", ' ', title)
+    title = re.sub('-', ' ', title)
+
+    # remove duplicated spaces
+    title = re.sub(' +', ' ', title)
     return title.strip()
 
-end_of_sentence = '.' # symbol to denote the end of the sentence
 # --------------------------- Creating the vocabulary ----------------------------
+end_of_sentence = '.' # symbol to denote the end of the sentence
 def create_vocabulary(stories):
     '''
-    Creates a vocabulary of the story titles
+    Creates a vocabulary of the story titles.
     '''
     vocabulary = set()
     for title in stories:
-      title_words = clean_title(title).split(' ')
+      title_words = clean_title(title).split(" ")
       vocabulary.update(title_words)
     word_list = list(vocabulary)
     word_list.append(end_of_sentence)
     vocabulary = {word_list[word]:word for word in range(0,len(word_list))}
     return vocabulary
 
-# create vocabulary out of the original bedtime story titles
+# create vocabulary of the fairy tale titles
+# titles: index for the one-hot shot
 VOCABULARY = create_vocabulary(STORIES)
 vocab_size = len(VOCABULARY)
+
+print("The vocabulary:")
 print(VOCABULARY)
+
+print(f"Total number of unique words: {vocab_size}")
 
 
 # --------------------------- 2. PREPARE THE TRAINING SET --------------------------
 # Word to tensor encodings ...
+
 # Translate word to an index from vocabulary
-def wordToIndex(word):
+def word_to_index(word):
     if (word != end_of_sentence):
         word = clean_title(word)
     return VOCABULARY[word]
 
 # Translate word to 1-hot tensor
-def wordToTensor(word):
+def word_to_tensor(word):
     tensor = torch.zeros(1, 1, vocab_size)
-    tensor[0][0][wordToIndex(word)] = 1
+    tensor[0][0][word_to_index(word)] = 1
     return tensor
 
 # Turn a title into a <title_length x 1 x vocab_size>,
 # or an array of one-hot vectors
-def titleToTensor(title):
+def title_to_tensor(title):
     title_words = clean_title(title).split(' ')
     tensor = torch.zeros(len(title_words) + 1, 1, vocab_size)
     for index in range(len(title_words)):
-        tensor[index][0][wordToIndex(title_words[index])] = 1
+        tensor[index][0][word_to_index(title_words[index])] = 1
+
     tensor[len(title_words)][0][VOCABULARY[end_of_sentence]] = 1
     return tensor
 
 # Turn a sequence of words from title into tensor <sequence_length x 1 x vocab_size>
-def sequenceToTensor(sequence):
+def sequence_to_tensor(sequence):
     tensor = torch.zeros(len(sequence), 1, vocab_size)
     for index in range(len(sequence)):
-        tensor[index][0][wordToIndex(sequence[index])] = 1
+        tensor[index][0][word_to_index(sequence[index])] = 1
     return tensor
 
 # ----------------------------- 3. CREATING THE SEQUENCES --------------------------------
@@ -103,8 +112,8 @@ def generate_sequences(stories):
                 sequence = title_words[i:i + sequence_length]
                 target = title_words[i + sequence_length:i + sequence_length + 1]
 
-                sequence_tensor = sequenceToTensor(sequence)
-                target_tensor = sequenceToTensor(target)
+                sequence_tensor = sequence_to_tensor(sequence)
+                target_tensor = sequence_to_tensor(target)
 
                 sequences.append(sequence_tensor)
                 targets.append( target_tensor)
@@ -113,39 +122,8 @@ def generate_sequences(stories):
 # generate sequences for all the story titles!
 sequences, targets = generate_sequences(STORIES)
 
-# ----------------------------- 4. CREATING THE SEQUENCES --------------------------------
-# Generate sequences out of titles:
 
-sequence_length = 4 # hyperparam that can be tweaked
-
-# Generate sequences
-def generate_sequences(stories):
-    sequences = []
-    targets = []
-    # Loop for all selected titles
-    for title in STORIES:
-        # Run through each title
-        if clean_title(title) != '' and clean_title(title) != ' ':
-            title_words = clean_title(title).split(' ')
-            #print(title_words)
-            title_words.append(end_of_sentence)
-
-            for i in range(0, len(title_words) - sequence_length):
-                sequence = title_words[i:i + sequence_length]
-                target = title_words[i + sequence_length:i + sequence_length + 1]
-
-                sequence_tensor = sequenceToTensor(sequence)
-                target_tensor = sequenceToTensor(target)
-
-                sequences.append(sequence_tensor)
-                targets.append( target_tensor)
-
-    return sequences, targets
-
-# generate sequences for all the story titles!
-sequences, targets = generate_sequences(STORIES)
-
-# ----------------------------- 5. LSTM MODEL  --------------------------------
+# ----------------------------- 4. LSTM MODEL STRUCTURE --------------------------------
 class LSTM_model(nn.Module):
     '''
     Simple LSTM model to generate bedtime story titles.
@@ -170,16 +148,17 @@ class LSTM_model(nn.Module):
         return output, hidden
 
     # the initialization of the hidden state
-    # we are using cuda speeds up the computation
+    # using cuda speeds up the computation
     def initHidden(self, device):
-        return (torch.zeros(1, 1, n_hidden).to(device), torch.zeros(1, 1, n_hidden).to(device))
+        return (torch.zeros(1, 1, num_hidden).to(device), torch.zeros(1, 1, num_hidden).to(device))
+
 
 # ---------- Initialize LSTM
 
-n_hidden = 128 # number of hidden units
+num_hidden = 128 # number of hidden units , hyperparam
 
 # inputs and outputs of RNN are tensors representing words from the vocabulary
-rnn = LSTM_model(vocab_size, n_hidden, vocab_size)
+rnn = LSTM_model(vocab_size, num_hidden, vocab_size)
 
 #  Function to convert the output of the model into a word
 def output_to_word(output):
@@ -282,39 +261,47 @@ plt.figure()
 plt.plot(all_losses)
 
 
-def generate_title(input_word):
-    # The max number of words the generated titles will have
-    max_num_words = 12
-    # Initialize input step and hidden state
-    input = wordToTensor(input_word)
-    hidden = (torch.zeros(1, 1, n_hidden).to(device), torch.zeros(1, 1, n_hidden).to(device))
-    i = 0
-    output_word = None
-    sentence = []
+# Generates title given the first word
+def generate_title(first_word):
+    max_num_words = 5 # in a title
+    sentence = [first_word]
 
-    # Sample words from the model
+    # Initialize input step and hidden state
+    input_tensor = word_to_tensor(first_word)
+    hidden = (torch.zeros(1, 1, num_hidden).to(device), torch.zeros(1, 1, num_hidden).to(device))
+    output_word = None
+    i = 1
+
+    # Generate title
     while output_word != '.' and i < max_num_words:
-        input = input.to(device)
-        output, next_hidden = rnn(input[0], hidden)
-        y = output.clone()
-        y = y.to(device)
+        input_tensor = input_tensor.to(device)
+        output, next_hidden = rnn(input_tensor[0], hidden)
+        final_output = output.clone().to(device)
+
         # Use the probabilities from the output to choose the next word
-        word_index = np.random.choice(range(vocab_size), p = y.softmax(dim=1).detach().cpu().numpy().ravel())
+        probabilities = final_output.softmax(dim=1).detach().cpu().numpy().ravel()
+        word_index = np.random.choice(range(vocab_size), p = probabilities)
 
         output_word = [key for (key, value) in VOCABULARY.items() if value == word_index][0]
         sentence.append(output_word)
+
+        # update
+        input_tensor = word_to_tensor(output_word)
         hidden = next_hidden
-        input = wordToTensor(output_word)
-        i = i+1
+        i += 1
+
+    if sentence[-1] != ".": sentence.append(".")
+
     return sentence
 
 # ----------------------------- 5. TESTING LSTM MODEL OUTPUTS --------------------------------
-# Sample 5 titles and print
-# for i in range(5):
-#     sampled_title = generate_title()
-#     title = ' '.join(sampled_title)
-#     print(title)
-#     print("\n")
+# Testing on different iterations of the title with the same word start
+num_titles = 10
+print(f"Generating {num_titles} titles...\n")
+for i in range(num_titles):
+    sampled_title = generate_title("white") # plug in word from the VOCABULARY
+    title = ' '.join(sampled_title)
+    print(title)
 
 
 

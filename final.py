@@ -105,25 +105,32 @@ def generate_story(prompt):
     i = 0
     first_word = story_vocab[i]
     while first_word not in VOCABULARY:
-        first_word = story_vocab[i + 1]
+        i += 1
+        if i == len(story_vocab):
+          first_word = "the"
+          break
+        first_word = story_vocab[i]
 
     # The first word in the title will be the word that occurs the most often in the story
     # get generated title and include it to the final title
     final_title = generate_title(first_word)
     final_title = ' '.join(final_title).upper()
+    final_title += "\n"
+
     # return the completed title and the story
     typewriter_effect(final_title, 0.1)
     typewriter_effect(completed_story, 0.1)
 
+
 if __name__ == "__main__":
     print("------------ HELLO! I am your personal bedtime story assitant ------------\n")
-    print("--------------------------------------------------------\n")
+    print("--------------------------------------------------------------------------\n")
     prompt = input('Please write the beginning of your bedtime story and we will help you write the rest: \n')
-    print("--------------------------------------------------------\n")
+    print("--------------------------------------------------------------------------\n")
     typewriter_effect("COMPLETING STORY", 0.1)
     typewriter_effect("... ...  ...        ... ...  ...\n", 0.2)
     typewriter_effect("GENERATING TITLE", 0.1)
     typewriter_effect("... ...  ...        ... ...  ...\n", 0.2)
-    print("--------------------------------------------------------\n")
-    print("--------------------------------------------------------\n")
+    print("--------------------------------------------------------------------------\n")
+    print("--------------------------------------------------------------------------\n")
     generate_story(prompt)
