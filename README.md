@@ -2,7 +2,7 @@
 <h3>CSC413 - Neural Networks & Deep Learning Final Project</h3>
 
 ## Running the Project
-- You can run the entire project with the already trained models on the following google collab:
+- We have included the code which loads the final trained models and generates results in a file called `final.ipynb`. You can run the code in the following google collab:
 > https://colab.research.google.com/drive/1doRR2Nh--ooMe-2js0yKwtGhU9BDygvF?usp=sharing
 
 - This repo contains the full implementation of the project in the following structure:
@@ -24,7 +24,7 @@ We created two models to aid writers with creating short bedtime stories.
 The two models can be used together in an application to help writers overcome writer's block and improve their speed of writing short bedtime stories.
 
 For the short-story generation, we fine-tuned a pre-trained GPT-2 model.
-For the title generation, we trained an RNN model from scratch. Both were trained on a dataset comprised of childrens' books. Therefore, we present our model in the context of generating this type of story --- though we believe that the architecture employed should be similarly useful for other genres.
+For the title generation, we trained an RNN model from scratch. Both were trained on a dataset comprised of childrens' books. Therefore, we present our model in the context of generating this type of story --- though we believe that the architecture employed should be similarly useful for other domains.
 
 ## Model Figure
 
