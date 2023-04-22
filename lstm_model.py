@@ -310,11 +310,11 @@ def generate_title(input_word):
 
 # ----------------------------- 5. TESTING LSTM MODEL OUTPUTS --------------------------------
 # Sample 5 titles and print
-for i in range(5):
-    sampled_title = generate_title()
-    title = ' '.join(sampled_title)
-    print(title)
-    print("\n")
+# for i in range(5):
+#     sampled_title = generate_title()
+#     title = ' '.join(sampled_title)
+#     print(title)
+#     print("\n")
 
 
 

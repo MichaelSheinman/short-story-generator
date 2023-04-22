@@ -3,31 +3,31 @@
 
 ## Introduction
 
-We created two models to aid writers with creating short stories.
+We created two models to aid writers with creating short bedtime stories.
 
 - A short-story generator: A model that takes the start of a short story and continues the story.
-- A title generator: a sequence-to-sequence model that generates a title given a short story.
+- A title generator: A sequence-to-sequence model that generates a bedtime story title.
 
-The two models can be used together in an application to help writers overcome the writer's block and improve their speed of writing short stories.
+The two models can be used together in an application to help writers overcome writer's block and improve their speed of writing short bedtime stories.
 
 For the short-story generation, we fine-tuned a pre-trained GPT-2 model.
 For the title generation, we trained an RNN model from scratch. Both were trained on a dataset comprised of childrens' books. Therefore, we present our model in the context of generating this type of story --- though we believe that the architecture employed should be similarly useful for other genres.
 
 ## Model Figure
 
-#### GPT2 model:
+#### **GPT2 model:**
 
 GPT-2 is primarily comprised of a sequence of transformer blocks, each employing (masked) multi-headed attention ([Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)), with multiple normalization layers at the beginning of each block, plus one normalization layer at the end of the transformer stack ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)). The exact number and size of these blocks depends on the size of model used (see "Model Parameters" below). Note the GPT architecture is decoder-only.
 
 Inputs are represented as tokens, though the relationship between words and tokens is not one-to-one (see "Data Transformation" below for more details). Of note, the transformer sequence is preceded by an encoder which encodes these tokens and applies positional encoding. When carrying out text generation, the transfomer sequence is followed by a linear modelling head, which is a "linear layer with weights tied to the input embeddings" ([Documentation](https://huggingface.co/docs/transformers/model_doc/gpt2))
 
-#### RNN model:
+#### **RNN model:**
 
-RNN with LSTM cell can be broken down into three main components: the input layer, the LSTM layer, and the output layer. The LSTM layer consists of a series of LSTM cells that process the input sequence in a sequential manner. Each LSTM cell has three main components: the input gate, the forget gate, and the output gate. These gates control the flow of information in and out of the cell, allowing the LSTM to selectively remember or forget information from previous time steps. The output layer of an RNN with LSTM cell receives the final hidden state output from the LSTM layer and produces the final output for the sequence.
+RNN with LSTM cell can be broken down into four main components: the input layer, the LSTM layer, the linear layer and the output layer with the softmax activation. The LSTM layer consists of a series of LSTM cells that process the input sequence in a sequential manner. Each LSTM cell has three main components: the input gate, the forget gate, and the output gate. These gates control the flow of information in and out of the cell, allowing the LSTM to selectively remember or forget information from previous time steps. The output layer of an RNN with LSTM cell receives the final hidden state output from the LSTM layer and produces the final output for the sequence.
 
 ## Model Parameters
 
-#### GPT2 Model:
+#### **GPT2 Model:**
 
 Due to compute limitations, we present our results based on our use of the smallest GPT2 instance, which has approximately 117 \* 1024^2 parameters (117M) ([Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)), laid out across 12 layers (i.e. 12 transformer blocks), whose inputs and outputs are 768-dimensional. The attention layers work with 1024 token context lengths and have 12 heads. The feed-forward layers work with dimension 3072 (as in GPT1).
 
@@ -51,12 +51,39 @@ The last normalization layer `ln_f` has a relatively negligible 1536 parameters 
 
 Note that the language modelling head has weights tied to the input embedding, so it does not add to our parameter count.
 
-#### RNN Model:
+#### **RNN Model:**
+In the case of our LSTM model we need to look at the input, output and the layers of our model to get the total number parameters.
+To get a better idea the input is a one-hot tensor with the size of the vocabulary because each "slot" represents a word of the vocabulary,
+the output is represented in the same way so it is correct to say that both the input and the output are the size of the vocabulary (2111, since there are 2111 words in the vocabulary).
+Also, we must account for the number of parameters in each LSTM cell which has four gates: the input, output, forget and cell gate.
+Therefore we have a factor of 4 for the lstm cell and for the hidden state lstm cell.
+
+So for the LSTM layer, the number of parameters is calculated as:
+`4 * ((input_size + hidden_size) * hidden_size) + 4 * hidden_size`
+`= 4 * ((2111 + hidden_size) * hidden_size) + 4 * hidden_size`
+where input_size is the size of the input vocabulary, and hidden_size is the size of weights and biases for the LSTM.
+
+
+For the Linear layer, the number of parameters is calculated as:
+`(hidden_size * output_size) + output_size`
+`= (hidden_size * 2111) + 2111`
+Note that in the case of the Linear layer the output_size is the size of the output vocabulary and the size of weights and biases for the Linear layer.
+
+Also note that hidden_size is a hyperpameter so by knowing its value we can compute the total number of parameters which is the sum of the parameters for the LSTM layer and the Linear Layer.
+In the case of our model we set the hidden_size to be 128 .
+So the total parameters for the RNN model layer given the value of the hidden_size is:
+`total params in LSTM layer + total params in Linear layer`
+`[4 * ((2111 + hidden_size) * hidden_size) + 4 * hidden_size] + [(hidden_size * 2111) + 2111]`
+`= [4 * ((2111 + 128) * 128) + 4 * 128] + [(128 * 2111) + 211]`
+`= 1417299`
+
+Therefore RNN model has ~1417299 total parameters.
+
 
 ## Model Examples
 
-#### GPT2 Model:
-Successful story generated:
+#### **GPT2 Model:**
+*Successful story generated:*
 
 Prompt: Laura was searching for a prince
 
@@ -71,7 +98,7 @@ Story:
 > He was the one who had brought the dragon to the swamp, and she had been trying to take over the kingdom. She was wrong. She had been wrong.
 > And she had been wrong again.
 
-Unsuccessful story generated
+*Unsuccessful story generated*
 
 Prompt: My dog went to the park and he found
 
@@ -79,13 +106,43 @@ Story:
 > My dog went to the park and he found me. He looked at me and said, 'I'm sorry, it's me.' And he said, 'I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry.' He said, 'That's not me, that's a friend.' And I said, 'It's not me. It's a dog. I'm a dog. It's not me. It's a friend.' And he said, 'That's not me, that's a friend.' And I said, 'That's not me. It's a dog. I'm a dog.' He said, 'That's not me.' And I said, 'That's not me. It's a friend.' And he said, 'That's not me.' And I said, 'That's not me.' And he said, 'That's not me.' And he said, 'That's not me.' And I said, 
 
 
-#### RNN Model:
+#### **RNN Model:**
 
-Successful story title generated: "teeny frank ."  
-Unsuccessful story title generated: "year blackfeet cudred on how the how all his his pipes saw ."
+The following titles were generated with the `sequence_length = 4` as hyperparameter.
+After the model was trained, we used the `max_title_length = 5` and set the first word for the titles to be "white".
 
-The first title is considered successful since it is concise, logical and descriptive. It was generated with the `sequence_length = 4` hyperparameter.  
-The second title is considered unsuccessful since it lacks meaning. It was generated with the `sequence_length = 3` hyperparameter.
+*Successful story title generated:*
+> white december .
+
+*Unsuccessful story title generated:*
+>white on representative "venetia henny
+
+The first title is considered successful since it is concise, logical and descriptive. It also hints at the idea of snowy winter and the there are no syntactical grammar issues.
+The second title is considered unsuccessful since it lacks meaning and it is confusing. it has quotes in the middle of the title and the order for adjectives and nouns is unantural.
+
+To share more in depth results, these are <u>examples of the titles in contrast</u> with the generated stories.
+
+*Successful story title generated:*
+
+Prompt: The winter was approaching
+
+Title: WIND LAID
+
+Story:
+>The winter was approaching, the sun was setting, and I saw the wind whipping and twisting and twisting my limbs and the soft clods that hung on my feet and the tangled bits of wood that clung to my feet, all around me. I was Boolean, but my mind had no idea how to begin to move in the first place. The wind had already begun to move, and my legs were tired of clinging to each other as they pulled away from the branches and into the snow. The
+
+In this case the title seems to match the story well because the story mainly talks about the WIND and the wind seems to be described as LAID just like the narrator who is laying and seems to be unable to move.
+
+**Unsuccessful story title generated:**
+
+Prompt: The winter was approaching
+
+Title: SNOW CHARTER SLUGGARDS INN KINGFISHER .
+
+Story:
+>The winter was approaching, and I had no idea why I was so frightened, for the snow was so thick, and there was so much snow, and the snow was so dense. I felt so frightened and alone, that I did not think how to get up, or go home. The wind was so strong, and the earth so rough, that I had no way out, and the only way was to go up and out again. When I was ready, I went up and out again
+
+In this case the title in unsuccesful. Even though the title mentions snow which is mostly mentioned in the story, the rest of the title has nothing to do with the story and even lacks meaning on its own.
 
 ## Data
 
@@ -113,12 +170,13 @@ For the title generator, we use a naive bag-of-words encoder. This has the limit
 
 ## Data Split
 
-For the GPT-2 model, we did a 70-10-20 split. 70% of the data was the training set, 10% of the data was the validation set, and 20% of the data was the testing set. This is a fairly standard split. We decided to place more data into the testing set (20%) in contrast to validation because we run validation at each epoch, and the process was fairly time consuming. Testing in contrast is done only once, after the model is trained.  
+For the **GPT-2 model**, we did a 70-10-20 split. 70% of the data was the training set, 10% of the data was the validation set, and 20% of the data was the testing set. This is a fairly standard split. We decided to place more data into the testing set (20%) in contrast to validation because we run validation at each epoch, and the process was fairly time consuming. Testing in contrast is done only once, after the model is trained.
+
+In the case of the **RNN model**, we did not split the data as we wanted to make the most out of the titles of all the stories and give our model the opportunity to be as exposed as different types of word sequences upon training, considering that the prompt could be anything and that the story that GPT-2 generated would likely have way more diverse words then the vocabulary of titles in the dataset.
 
 ## Training Curve
 
-#### GPT2 Model:
-
+#### **GPT2 Model:**
 
 The training and validation curves for the GPT-2 model are shown below. We found that regardless of the amount of epochs we attempted to use, we were not able to decrease the validation loss beyond 2 epochs. 
 We suspect this may due to a lack of data. Each story features different words and patterns from stories in the training set do not necessarily translate to strong patterns in validation set, beyond some basic level of the structure. 
@@ -126,7 +184,7 @@ We suspect this may due to a lack of data. Each story features different words a
 <img src='images/training_validation_gpt2.png' width="40%" height="40%">
 
 
-#### RNN Model:
+#### **RNN Model:**
 
 Below is the training loss curve generated in lstm_model.py. The plot was generated by conducting 1100000 iterations of training and graphing the resulting loss at intervals of 1000 iterations. The hyperparameters used for training the model were as follows:
 
@@ -136,9 +194,11 @@ Below is the training loss curve generated in lstm_model.py. The plot was genera
 
 <img src='images/train_curve.png' width="40%" height="40%">
 
+*Note that in the figure above, the y-axis represents the loss and the x-axis represents the number of iterations.*
+
 ## Hyperparameter Tuning
 
-#### GPT2 Model:
+#### **GPT2 Model:**
 
 There are a number of hyperparameters for the GPT-2 model, and we have experimented with different combinations of these. Here are our results:
 - Batch Size. Number of samples used in a pass. Due to the large number of parameters GPT-2, we were limited to small batch sizes (4 or below). These batch sizes did not make a significant difference. 
@@ -147,7 +207,7 @@ There are a number of hyperparameters for the GPT-2 model, and we have experimen
 - max_seq_len: The maximum length of a sequence, the amount of context we could capture. We could only go up to 400 without running into out of memory errors. 
 
 
-#### RNN Model:
+#### **RNN Model:**
 
 1. Tune `sequence_length`.
 
@@ -186,7 +246,7 @@ balloon appears lead himself .
 boscombe tail r s wen .
 ```
 
-From the analysis of multiple output blocks, `sequence_length = 4` is the better hyperparameter choice.
+From the analysis of multiple output blocks, `sequence_length = 4` is the better hyperparameter choice because we get more consistent titles in terms of sentence structure and correct context.
 
 2. Tune `learning_rate`.
 
@@ -214,15 +274,16 @@ publishers midsummer .
 clever delight .
 ```
 
-From the analysis of multiple output blocks, `learning_rate = 0.005` is the better hyperparameter choice.
+From the analysis of multiple output blocks, `learning_rate = 0.005` is the better hyperparameter choice as the sentences were more consistent in length. Not too long or too short and overall there were less syntactical issues.
 
 ## Quantitative Measures
 
-For the GPT-2 model we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU. We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.
+For the **GPT-2 model** we investigated a few different quantitative methods of measuring our model, including ROUGE, BERTScore, and BLEU. We decided to used the BLEU score as our measure as we found it to be the most widespread, simple, and effective metric for our task. BLEU stands BiLingual Evaluation Understudy. It's a quantative metric to evaluate the quality of translated text. The metric was first proposed in a 2002 [paper](https://aclanthology.org/P02-1040.pdf?ref=blog.paperspace.com) for automatic evaluation of machine translation.
 
 BLEU evaluates the quality based on the similarity of two texts. It provides a score between 0 and 1 to indicate how close the text is a human text. We implement this method by cutting off the end of a generated story and using our model to generate the continuation of the text.
 
-## Results
+## Quantitative and Qualitative Results
+
 #### GPT2 Model:
 
 #### RNN Model:
@@ -328,6 +389,28 @@ One of the big challenges we ran into was simply compute. Fine tuning GPT2 is ve
 reduces the quality of our outputs.
 
 Additionally, we noticed that validation loss tended to level off after a small number of epochs. Given that modern LLMs are usually trained with relatively few passes over the data, this is not completely unexpected. Even so, it may indicate limitations in our training process.
+### **RNN Model**
+1. Training:
+
+    Dataset size is a crucial factor in the training of LSTM models, as it plays a significant role in determining the model's accuracy and generalizability. When the dataset is too small, the model may overfit the training data. This leads to poor generalization and high errors when applied to new data.
+  
+    Our LSTM model is trained on the titles section of the dataset, which contains approximately 1000 entries (the same as the number of stories). The vocabulary used for title generation consists of all the words present in the titles, and contains 2111 words. Due to the relatively limited size of the vocabulary, the potential for successful word combinations/sequences is restricted. Furthermore, the presence of numerical characters in some titles, which carry little or no semantic meaning, also had an impact on the accuracy of the model. All of these factors collectively contribute to the overall performance of our LSTM model.
+
+2. Comparison to the GPT-2 Model:
+
+    Unlike the GPT-2 model, we developed the RNN model entirely from scratch, requiring us to use our own time and computational resources to train it. Consequently, the model's generative ability is comparatively more constrained than the GPT-2 model. Since GPT-2 had the parameters and complexity to handle many of the prompts used for the generation of the story but the RNN model was too simple in comparison. The RNN model could only handle words from prompts or stories generated that were also in the vocabulary.
+
+
+3. Model meaning in terms of the project:
+
+    Despite the major differences in the models, we wanted to make sure that our titles matched the story otherwise it felt like two different models with different goals in mind. In the beginning our RNN model was only based on the original vocabulary and the first word was always an empty string. Although this structure gave us the oportunity to test out our code and see if we got reasonable, yet minimally intensive computational results, it still felt like a random title generator and did not really exploit the influence that the first word has on the title.
+
+    Our first approach to connect the models together was to take the generated story and sort all its words in a dictionary based on the number of occurences and include the top 3 words from the story in the title. Since we noticed that the most common word was usually a stop word like "the" or "a" then this word went at the beginning of the generated title, and the remaining common words went at the end of the title. This made the titles very long and unnatural as the sentence really lacked meaning and structure.
+
+    In our second approach, we decided to take advantage of the influence that the first word of the title has on the rest of the title when it is used as the input for the model. In this case, we asked the user to provide the first word of the title in the same way that they would provide the beginning of the story. Although this approach gives the user more control as to how to start their title we noticed that the user could simply use a word that has nothing to do with the story and then the models would be used as two separate tools.
+
+    For our final approach, we decided to improve on the first and second approach by still taking advantage of the first word which would actually be a word from the generated story. In this case we sorted the unique words of the generated story from most to least occurences and made sure to only account for words in the generated story that have meaning. To clarify, we have a long list of stop words which are words that are typically used for syntax but do not give context and in the case of a title we really care about context! We also needed to make sure that the first word was in the vocabulary of the trained model otherwise the choice would be useless. Although this situation perfectly shows the need for more data so that we can have a greater possibility of more rich titles, we accomodated for this issue by using the next most common word as the first word until we guaranteed that the first word was in the vocabulary. In the case that we ran out of the story's unique words and none were in the vocabulary, we would use the word "the" as the first word since this is a very common word to start a title for a children's bedtime story.
+
 
 ## Ethical Considerations
 
@@ -335,6 +418,13 @@ The ethical implications of our model are common to any text generation model.
 Firstly, there is no guarantee that the output of the model is unique. In case of overfitting, the output data of the model may be identical to the contents of the dataset and even if the model does not reproduce the actual content of these stories, it may still copy the authors' style, ideas, or other valuable details. Another implication is the issue of intellectual property and rights. The story generated by AI raises questions about who owns the intellectual property rights to the generated content. If a machine creates a piece of content, should it belong to the person who trained the machine, the machine itself, or no one?
 
 It is also important to notice that despite having 20.6 MB of data, the stories of the dataset themselves might not be inclusive or diverse enough for children of different backgrounds. This is an important issue because bedtime stories can give children perspectives on the world and representation at a young age is important for a child's development. Depending on the timeline when the stories of the dataset were written, there may be a lot of detrimental bias in the stories that portray certain groups of people as villanous and others as heroic. On that note, the model could potentially generate harmful content since there is no human supervision of the generated text. This leads us to the implication of responsibility and accountability. The stories generated by AI raise questions about who is responsible for the content generated by the machine in case of harmful output. Should the responsibility fall on the developer, the user, or the machine itself?
+
+As we tested the model, it was brought to our attention that there can be many words that can create inappropriate sentences due to the effect of the word and its order, on the context, tone and meaning of the sentence.
+
+For example, words like: "black", "cock" can create very innocent sentences in the context of a child's story, especially when a conscious human is writing these stories. In the case of our model, the model has no understanding of the effect that its product can have on a child and how the ordering affects context. This is why, many of these generated titles need regulation as some unintentionally end up having a potentially sexual, racist, derogative and innapropriate meaning. The example below shows this unfortunate cases:
+
+<img src='images/example3.png' width="70%" height="50%">
+
 
 ## Authors
 
@@ -346,6 +436,8 @@ It is also important to notice that despite having 20.6 MB of data, the stories 
 - Setting up the LSTM model
 - Putting the code for the models on the repo
 - Implementing final.py: where the user interacts with the project
+- Debugging RNN model and implementing ways to conceptually connect this model to the GPT-2 Model
+- Worked on the writeup (general sections, RNN related sections)
 
 **Mateus Moreira :**
 
@@ -364,3 +456,10 @@ It is also important to notice that despite having 20.6 MB of data, the stories 
 - Attempted setting up 3 different architectures: NanoGPT, GPT-2 Medium, and plain transformers. Found that none of these architectures were feasible due to Google Collab limitations and short story sequences being too long.
 
 **Ekaterina Semyanovskaya:**
+
+- Contributed to RNN model implementation.
+- Was responsible for RNN model training.
+- Was responsible for tuning hyperparameters of the RNN model.
+- Contributed to setting up a connection between the GPT-2 and the RNN models.
+- Was responsible for the RNN model performance analysis (in report: training curve, tuning hyperparameters, etc.).
+- Contributed to many other general and RNN-related report sections (in report: dataset, dataset transformation, model description, parameters, etc.).
