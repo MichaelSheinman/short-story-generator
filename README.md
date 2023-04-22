@@ -1,6 +1,19 @@
 <h1>Bedtime Story Completion Model</h1>
 <h3>CSC413 - Neural Networks & Deep Learning Final Project</h3>
 
+## Running the Project
+- You can run the entire project with the already trained models on the following google collab:
+> https://colab.research.google.com/drive/1doRR2Nh--ooMe-2js0yKwtGhU9BDygvF?usp=sharing
+
+- This repo contains the full implementation of the project in the following structure:
+
+  `clean.py:` The code that clean the data set used to train the models (for more information on the dataset and how to download it please see *the Data section*.)
+
+  `story_generation.py:` The code used to train and structure the data for the GPT-2 model which generates the bedtime story
+
+  `lstm_model.py:` The code used to train and structure the data for the RNN model which generates the title of the bedtime story
+
+  `final.py:` The code that prompts the user to use the program and write share the beginning of the story. This file connects both models as generates a bedtime story and generates a title based on the generated bedtime story.
 ## Introduction
 
 We created two models to aid writers with creating short bedtime stories.
