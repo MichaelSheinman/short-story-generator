@@ -9,7 +9,7 @@
 
   `clean.py:` The code that clean the data set used to train the models (for more information on the dataset and how to download it please see *the Data section*.)
 
-  `story_generation.py:` The code used to train and structure the data for the GPT-2 model which generates the bedtime story
+  `storygeneratorfinal.ipynb:` The code used to train and structure the data for the GPT-2 model which generates the bedtime story
 
   `lstm_model.py:` The code used to train and structure the data for the RNN model which generates the title of the bedtime story
 
