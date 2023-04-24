@@ -45,6 +45,8 @@ Inputs are represented as tokens, though the relationship between words and toke
 
 RNN with LSTM cell can be broken down into four main components: the input layer, the LSTM layer, the linear layer and the output layer with the softmax activation. The LSTM layer consists of a series of LSTM cells that process the input sequence in a sequential manner. Each LSTM cell has three main components: the input gate, the forget gate, and the output gate. These gates control the flow of information in and out of the cell, allowing the LSTM to selectively remember or forget information from previous time steps. The output layer of an RNN with LSTM cell receives the final hidden state output from the LSTM layer and produces the final output for the sequence.
 
+![](images/rnn_diagram.png)
+
 ## Model Parameters
 
 #### **GPT2 Model:**
