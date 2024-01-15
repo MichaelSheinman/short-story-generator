@@ -474,7 +474,7 @@ For example, words like: "black", "cock" can create very innocent sentences in t
 
 <br>
 
-**Laura Maldonado :**
+**Laura Maldonado Madrid:**
 
 - Worked on cleaning and pre-processing the dataset
 - Setting up the LSTM model
